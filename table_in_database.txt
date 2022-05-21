@@ -1,0 +1,21 @@
+DO
+$$
+    BEGIN
+        CREATE TYPE customer_status AS ENUM ('ACTIVE','BLOCKED','DELETED');
+    EXCEPTION
+        WHEN duplicate_object THEN null;
+    END
+$$;
+
+CREATE TABLE IF NOT EXISTS customer
+(
+    id         BIGINT GENERATED ALWAYS AS IDENTITY,
+    name       VARCHAR(32) NOT NULL,
+    surname    VARCHAR(32) NOT NULL,
+    birth_date DATE        NOT NULL,
+    phone      VARCHAR(32) NOT NULL,
+    email      VARCHAR(256) UNIQUE,
+    status     customer_status DEFAULT 'ACTIVE',
+    created_at TIMESTAMP       DEFAULT now(),
+    updated_at TIMESTAMP       DEFAULT now()
+);
